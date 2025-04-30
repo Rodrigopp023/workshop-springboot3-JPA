@@ -1,7 +1,6 @@
 package com.projetospring.course.services;
 
 import com.projetospring.course.entities.Category;
-import com.projetospring.course.entities.User;
 import com.projetospring.course.repositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
