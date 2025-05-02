@@ -1,7 +1,6 @@
 package com.projetospring.course.resources.exceptions;
 
-import com.projetospring.course.services.exceptions.DataBaseException;
-import com.projetospring.course.services.exceptions.ResourceNotFoundException;
+import com.projetospring.course.services.exceptions.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;

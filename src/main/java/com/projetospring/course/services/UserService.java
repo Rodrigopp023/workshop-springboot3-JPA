@@ -2,15 +2,13 @@ package com.projetospring.course.services;
 
 import com.projetospring.course.entities.User;
 import com.projetospring.course.repositories.UserRepository;
-import com.projetospring.course.services.exceptions.DataBaseException;
-import com.projetospring.course.services.exceptions.ResourceNotFoundException;
+import com.projetospring.course.services.exceptions.*;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.*;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -34,7 +32,8 @@ public class UserService {
     public void delete(Long id) {
         try {
             repository.deleteById(id);
-        } catch (EmptyResultDataAccessException e) {       // Essa exeção RuntimeException vai retornar a msg de erro 204 do
+        } catch (
+                EmptyResultDataAccessException e) {       // Essa exeção RuntimeException vai retornar a msg de erro 204 do
             throw new ResourceNotFoundException(id);       // postman para terminal da IDE. Já o printStackTrace() vai mostrar
         } catch (DataIntegrityViolationException e) {      // o erro de exeção
             throw new DataBaseException(e.getMessage());
@@ -42,9 +41,13 @@ public class UserService {
     }
 
     public User update(Long id, User obj) {
-        User entity = repository.getReferenceById(id);
-        updateDate(entity, obj);
-        return repository.save(entity);
+        try {
+            User entity = repository.getReferenceById(id);
+            updateDate(entity, obj);
+            return repository.save(entity);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(id);
+        }
     }
 
     public void updateDate(User entity, User obj) {
