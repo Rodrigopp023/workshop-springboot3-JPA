@@ -2,8 +2,11 @@ package com.projetospring.course.services;
 
 import com.projetospring.course.entities.User;
 import com.projetospring.course.repositories.UserRepository;
+import com.projetospring.course.services.exceptions.DataBaseException;
 import com.projetospring.course.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,7 +32,13 @@ public class UserService {
     }
 
     public void delete(Long id) {
-        repository.deleteById(id);
+        try {
+            repository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {       // Essa exeção RuntimeException vai retornar a msg de erro 204 do
+            throw new ResourceNotFoundException(id);       // postman para terminal da IDE. Já o printStackTrace() vai mostrar
+        } catch (DataIntegrityViolationException e) {      // o erro de exeção
+            throw new DataBaseException(e.getMessage());
+        }
     }
 
     public User update(Long id, User obj) {
